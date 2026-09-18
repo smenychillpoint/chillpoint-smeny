@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ChillPoint smeny</title>
+  <meta name="description" content="Kalendár smien pre ChillPoint Laser Aréna Trnava">
+  <style>
+    :root{--yellow:#f5bb16;--black:#0a0c0f;--panel:#17191d;--line:#34373c;--muted:#a7a9ad;--white:#fff;--red:#ff6c6c;--green:#5fd67a}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--black);color:var(--white);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+    button,select,input{font:inherit}button{cursor:pointer}
+    .top{min-height:70px;padding:10px max(18px,calc((100vw - 1380px)/2));display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:1px solid #2c2f33;position:sticky;top:0;background:#0a0c0ff2;backdrop-filter:blur(15px);z-index:10}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:47px;height:47px;border:3px solid var(--yellow);border-radius:50%;display:grid;place-items:center;color:var(--yellow);font-size:12px;font-weight:900;flex-shrink:0}
+    .brand b{display:block;line-height:.85;font-size:14px}.brand small{font-size:10px;color:var(--muted);letter-spacing:.12em}
+    .outline{border:1px solid #4b4e53;background:#191b1f;color:white;padding:10px 14px;font-weight:700}
+    .outline:hover{border-color:var(--yellow)}
+    .topright{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .who-badge{display:flex;align-items:center;gap:8px;background:#191b1f;border:1px solid #4b4e53;padding:6px 10px 6px 6px;font-weight:700;font-size:13px}
+    .avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--yellow);color:#151619;font-weight:800;font-size:11px;flex-shrink:0}
+    .link-btn{background:transparent;border:0;color:var(--muted);text-decoration:underline;font-size:12px;padding:2px}
+    .badge-manager{background:var(--yellow);color:#141518;font-weight:900;padding:6px 12px;font-size:12px;letter-spacing:.08em}
+
+    .wrap{width:min(1380px,calc(100% - 32px));margin:auto;padding:30px 0}
+    .hero{background:var(--yellow);color:#17181b;padding:34px;display:grid;grid-template-columns:1.25fr .75fr;gap:34px;align-items:center;position:relative;overflow:hidden}
+    .hero:after{content:"";position:absolute;width:520px;height:520px;right:-190px;top:-210px;border-radius:50%;background:repeating-radial-gradient(circle,transparent 0 14px,#fff5 15px 16px)}
+    .hero>div{position:relative;z-index:1}
+    .tag{background:#1c1d1f;color:var(--yellow);padding:8px 12px;font-size:12px;font-weight:800;letter-spacing:.16em;display:inline-block}
+    .hero h1{font-size:clamp(40px,5.6vw,78px);line-height:.86;letter-spacing:-.06em;margin:16px 0 0;text-transform:uppercase}
+    .hero h1 span{display:block;color:#1c1d1f}
+    .hero p.lead{margin:14px 0 0;font-weight:700;max-width:520px}
+
+    .who{background:#1c1d1f;color:white;padding:22px;box-shadow:12px 12px 0 #ffffff4a}
+    .who label{display:block;color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.1em;margin-bottom:9px}
+    .who select,.who input{width:100%;height:48px;background:#0d0f11;color:#fff;border:1px solid #55585c;padding:0 13px;margin-bottom:10px}
+    .who p{font-size:13px;color:#b8b9bc;margin:11px 0 0}
+    .who .err{color:var(--red);font-size:12px;margin-top:6px}
+    .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .stat{background:#0e1012;border:1px solid #3a3d42;padding:14px}
+    .stat span{font-size:12px;color:var(--muted)}
+    .stat b{display:block;color:var(--yellow);font-size:23px;margin-top:5px}
+
+    .mine{margin-top:22px;padding:18px 20px;border:1px solid #3c3f44;border-left:7px solid var(--yellow);background:#15171a}
+    .mine small{color:var(--yellow);font-weight:800;letter-spacing:.13em}
+    .mine h3{margin:5px 0}
+    .chips{display:flex;gap:8px;overflow:auto;padding-bottom:4px}
+    .chip{min-width:150px;background:#090b0d;color:white;border:1px solid #404348;padding:10px;text-align:left;flex-shrink:0}
+    .chip b,.chip span{display:block}.chip span{font-size:12px;color:var(--muted);margin-top:4px}
+
+    .critical{margin-top:22px}
+    .critical .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .critical .head b{color:var(--yellow);font-size:12px;letter-spacing:.12em}
+    .crit-chip{min-width:auto;border-color:#5a2a2a;background:#1a1112}
+    .crit-chip span{color:var(--red)}
+
+    .roster{margin-top:22px;background:var(--panel);border:1px solid var(--line);padding:20px}
+    .roster h3{margin:0 0 14px;font-size:16px;text-transform:uppercase}
+    .roster h3:after{content:"";display:block;width:68px;height:5px;background:var(--yellow);margin-top:9px}
+    .rrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #2c2f33}
+    .rrow:last-child{border-bottom:none}
+    .rname{display:flex;align-items:center;gap:10px}
+    .rcode{font-weight:900;color:var(--yellow);letter-spacing:.15em}
+    .rbtns{display:flex;gap:6px}
+    .icon-btn{border:1px solid #4b4e53;background:#191b1f;color:white;width:32px;height:32px;padding:0}
+    .icon-btn.danger{color:var(--red);border-color:#5a2a2a}
+    .addrow{display:flex;gap:8px;margin-top:14px}
+    .addrow input{flex:1;height:44px;background:#0d0f11;color:#fff;border:1px solid #55585c;padding:0 12px}
+
+    .bar{display:flex;align-items:center;justify-content:space-between;margin:34px 0 15px;flex-wrap:wrap;gap:10px}
+    .bar h2{font-size:18px;margin:0}
+    .months{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .month{background:var(--panel);border:1px solid var(--line);padding:20px}
+    .month h3{text-transform:uppercase;font-size:23px;margin:0 0 18px}
+    .month h3:after{content:"";display:block;width:68px;height:5px;background:var(--yellow);margin-top:9px}
+    .week,.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+    .week span{text-align:center;color:#777;font-size:11px;font-weight:800;padding:5px}
+    .day{min-height:92px;background:#0d0f12;color:#eee;border:1px solid #2d3035;padding:8px;text-align:left;position:relative}
+    .day:hover{border-color:var(--yellow)}
+    .day.active{background:#232529;border-color:#55585d}
+    .day.active:after{content:"";position:absolute;right:8px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--yellow)}
+    .day.full.active:after{background:var(--red)}
+    .day.today{outline:2px solid var(--yellow)}
+    .day.mine{box-shadow:inset 0 0 0 2px var(--yellow)}
+    .num{display:block;font-weight:800;margin-bottom:10px}
+    .day strong{display:block;color:var(--yellow);font-size:12px}
+    .day.full strong{color:var(--red)}
+    .day small{display:block;color:#8f9297;font-size:10px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .closed{color:#4d5054!important}
+    footer{font-size:12px;color:#777;padding:17px 2px}
+    .dot{color:var(--yellow)}
+
+    .modal{position:fixed;inset:0;background:#000b;z-index:30;display:none;place-items:center;padding:18px}
+    .modal.open{display:grid}
+    .box{width:min(560px,100%);max-height:90vh;overflow:auto;background:#17191d;border:1px solid #484b50;padding:24px;position:relative}
+    .close{position:absolute;right:12px;top:10px;border:0;background:transparent;color:#aaa;font-size:28px}
+    .box h2{margin:0 35px 5px 0;text-transform:capitalize}
+    .sub{color:var(--muted);font-size:14px}
+    .section-title{color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.1em;margin:20px 0 10px;text-transform:uppercase}
+    .section-title:first-of-type{margin-top:16px}
+
+    .res-item{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;background:#241d10;border:1px solid #4a3a10;padding:10px 12px;margin-bottom:8px}
+    .res-item b{display:block;color:var(--yellow);font-size:13px}
+    .res-item span{display:block;color:#d8cfa8;font-size:12px;margin-top:2px}
+    .res-item button{border:0;background:transparent;color:var(--red);font-size:16px;flex-shrink:0}
+
+    .shift-card{background:#0e1012;border:1px solid #3a3d42;padding:12px;margin-bottom:10px}
+    .shift-card .shead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .shift-card .slabel{font-weight:800}
+    .shift-card .stime{color:var(--muted);font-size:12px}
+    .shift-card .sfree{font-size:12px;font-weight:800}
+    .shift-card .sfree.full{color:var(--red)}
+    .shift-card .sfree.ok{color:var(--green)}
+    .team{margin:10px 0 0}
+    .member{display:flex;align-items:center;gap:9px;border-bottom:1px solid #303338;padding:7px 0;font-size:13px}
+    .remove{margin-left:auto;border:0;background:transparent;color:var(--red);font-size:16px}
+    .primary{width:100%;height:44px;border:0;background:var(--yellow);color:#141518;font-weight:900}
+    .primary:disabled{opacity:.4}
+    .primary.small{height:36px;font-size:13px}
+    .manage-row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+    .manage-row input[type=number]{width:70px;height:36px;background:#0d0f11;color:#fff;border:1px solid #55585c;padding:0 8px}
+    .form{display:grid;gap:9px}
+    .form label{display:block;color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.1em;margin:5px 0 0}
+    .form input{width:100%;height:44px;background:#0d0f11;color:#fff;border:1px solid #55585c;padding:0 13px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    .msg{color:var(--yellow);font-size:13px;background:#f5bb1618;padding:10px;display:none;margin-top:10px}
+    .msg.show{display:block}
+    .add-box{background:#141518;border:1px dashed #4b4e53;padding:12px;margin-top:6px}
+    .toast-host{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:80;display:flex;flex-direction:column;gap:8px;align-items:center}
+    .toast{background:var(--yellow);color:#141518;font-weight:800;font-size:13px;padding:10px 18px;box-shadow:0 6px 18px #0008;white-space:nowrap}
+
+    @media(max-width:880px){.hero,.months{grid-template-columns:1fr}.who{box-shadow:7px 7px 0 #ffffff42}.day{min-height:76px}.day small{display:none}}
+    @media(max-width:560px){.top{padding:10px 13px}.brand small{display:none}.wrap{width:calc(100% - 20px);padding-top:24px}.hero{padding:20px;gap:22px}.hero h1{font-size:44px}.month{padding:10px}.week,.grid{gap:3px}.day{min-height:58px;padding:6px}.num{margin-bottom:5px;font-size:13px}.day strong{font-size:9px}.stat-row{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><div class="logo">CP</div><div><b>CHILL<br>POINT</b><small>LASER ARÉNA TRNAVA · SMENY</small></div></div>
+    <div class="topright" id="topright"></div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" id="hero"></section>
+
+    <section class="mine" id="mine" style="display:none;">
+      <div><small>MOJE SMENY</small><h3 id="myName"></h3></div>
+      <div class="chips" id="chips"></div>
+    </section>
+
+    <section class="critical" id="criticalSection" style="display:none;">
+      <div class="head"><b>TREBA DOPLNIŤ</b></div>
+      <div class="chips" id="critChips"></div>
+    </section>
+
+    <section class="roster" id="rosterSection" style="display:none;">
+      <h3>Zoznam zamestnancov</h3>
+      <div id="rosterList"></div>
+      <div class="addrow">
+        <input type="text" id="newEmpInput" placeholder="Meno a priezvisko">
+        <button class="outline" id="addEmpBtn">Pridať</button>
+      </div>
+    </section>
+
+    <div class="bar"><h2>▣ Kalendár smien</h2></div>
+    <div class="months" id="months"></div>
+    <footer><span class="dot">●</span> Voľné miesto · Zamestnanec sa môže prihlásiť, spravovať smeny a rezervácie môže iba vedúci.</footer>
+  </main>
+
+  <div class="modal" id="shiftModal">
+    <div class="box">
+      <button class="close" data-close>×</button>
+      <h2 id="shiftTitle"></h2>
+      <div class="sub" id="shiftNote">Smena v ChillPoint Laser Aréna</div>
+
+      <div class="section-title">Rezervácie / poznámky pre tento deň</div>
+      <div id="resList"></div>
+      <div id="resAddBox" class="add-box" hidden>
+        <div class="form">
+          <label>NÁZOV (napr. Uzavretá spoločnosť)</label><input id="resTitle" placeholder="napr. Firma XY – súkromná akcia">
+          <label>ČAS / POZNÁMKA</label><input id="resNote" placeholder="napr. 18:00–22:00 alebo celý deň">
+          <button class="primary small" id="resAddBtn">Pridať rezerváciu</button>
+        </div>
+      </div>
+
+      <div class="section-title">Zmeny</div>
+      <div id="shiftsList"></div>
+      <div id="shiftAddBox" class="add-box" hidden>
+        <div class="form">
+          <label>NÁZOV ZMENY</label><input id="newShiftLabel" placeholder="napr. Večerná zmena">
+          <div class="form-grid">
+            <div><label>OD</label><input id="newShiftStart" type="time" value="17:00"></div>
+            <div><label>DO</label><input id="newShiftEnd" type="time" value="24:00"></div>
+          </div>
+          <label>POČET POTREBNÝCH ĽUDÍ</label><input id="newShiftReq" type="number" min="1" max="20" value="2">
+          <button class="primary small" id="addShiftBtn">Pridať zmenu</button>
+        </div>
+      </div>
+
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="managerModal">
+    <div class="box">
+      <button class="close" data-close>×</button>
+      <h2>Režim vedúceho</h2>
+      <p class="sub">Zadaj PIN vedúceho zmeny.</p>
+      <div class="form"><input id="pin" type="password" inputmode="numeric" placeholder="PIN"><button class="primary" id="unlock">Otvoriť správu smien</button></div>
+      <div class="msg" id="pinMsg"></div>
+    </div>
+  </div>
+
+  <div class="toast-host" id="toastHost"></div>
+
+<script>
+  const MONTHS=['január','február','marec','apríl','máj','jún','júl','august','september','október','november','december'];
+  const DAYS=['PO','UT','ST','ŠT','PI','SO','NE'];
+  const MANAGER_PIN = '2026';
+  const $=id=>document.getElementById(id);
+
+  let db=null, dbAvailable=false;
+  let schedule={days:{}}, employees={list:[]};
+  let scheduleLoaded=false, employeesLoaded=false;
+  let myName = localStorage.getItem('cp_myname') || '';
+  let manager = sessionStorage.getItem('cp_manager') === '1';
+  let selected='';
+
+  const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  function todayKey(){ return iso(new Date()); }
+  function esc(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function randomCode(){ return String(Math.floor(1000+Math.random()*9000)); }
+  function uid(prefix){ return prefix+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+  function dayObj(key){ return (schedule.days && schedule.days[key]) || {shifts:[], reservations:[]}; }
+  function showToast(msg){
+    const host=$('toastHost'); const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+    host.appendChild(t); setTimeout(()=>{ t.style.transition='opacity .3s'; t.style.opacity='0'; setTimeout(()=>t.remove(),300); },2000);
+  }
+
+  function buildMonthDays(year,month){ const days=[]; const d=new Date(year,month,1); while(d.getMonth()===month){ days.push(new Date(d)); d.setDate(d.getDate()+1);} return days; }
+  function getVisibleMonths(){ const now=new Date(); const m1={year:now.getFullYear(),month:now.getMonth()}; let y2=now.getFullYear(),mo2=now.getMonth()+1; if(mo2>11){mo2=0;y2++;} return [m1,{year:y2,month:mo2}]; }
+  function allNeededKeys(){ let keys=[]; getVisibleMonths().forEach(m=>buildMonthDays(m.year,m.month).forEach(d=>keys.push(iso(d)))); return keys; }
+
+  function dayTotals(key){
+    const d=dayObj(key);
+    let req=0, filled=0;
+    (d.shifts||[]).forEach(s=>{ req+=s.required||0; filled+=(s.employees||[]).length; });
+    return { req, filled, free: req-filled, hasRes: (d.reservations||[]).length>0 };
+  }
+
+  // ---------- migration ----------
+  function needsMigration(daysObj){
+    return Object.values(daysObj||{}).some(d => d && !Array.isArray(d.shifts));
+  }
+  function migrateDays(daysObj){
+    const out={};
+    Object.entries(daysObj||{}).forEach(([k,d])=>{
+      if(d && Array.isArray(d.shifts)){ out[k] = { shifts:d.shifts, reservations: Array.isArray(d.reservations)?d.reservations:[] }; return; }
+      const req = d?.required||0, emps = d?.employees||[];
+      out[k] = { shifts: (req>0||emps.length>0) ? [{ id: uid('s'), label:'Zmena', start:'', end:'', required:req, employees:emps }] : [], reservations: [] };
+    });
+    return out;
+  }
+
+  // ---------- db ----------
+  async function initDb(){
+    try{ db = await claude.use('db'); }catch(e){ db=null; }
+    if(!db){ dbAvailable=false; scheduleLoaded=true; employeesLoaded=true; renderAll(); return; }
+    dbAvailable=true;
+    db.doc('app/schedule').onSnapshot(snap=>{
+      let raw = (snap.exists && snap.data() && snap.data().days) ? snap.data().days : {};
+      if(needsMigration(raw)){
+        raw = migrateDays(raw);
+        migrateWrite(raw);
+      }
+      schedule = { days: raw };
+      scheduleLoaded=true; ensureRange(); renderAll();
+    }, ()=>{});
+    db.doc('app/employees').onSnapshot(snap=>{
+      if(snap.exists && snap.data() && Array.isArray(snap.data().list)) employees=snap.data();
+      else if(snap.exists && snap.data() && Array.isArray(snap.data().names)) upgradeOld(snap.data().names);
+      else { employees={list:[]}; seedEmployees(); }
+      employeesLoaded=true; renderAll();
+    }, ()=>{});
+  }
+  let migrated=false;
+  async function migrateWrite(daysObj){
+    if(migrated || !dbAvailable) return; migrated=true;
+    try{ await db.doc('app/schedule').set({days:daysObj}); }catch(e){}
+  }
+  let seeded=false;
+  async function seedEmployees(){
+    if(seeded || !dbAvailable) return; seeded=true;
+    const defaults=['Alex Kováč','Ema Horváthová','Jakub Tóth','Nina Vargová','Samuel Baláž'].map(n=>({name:n,code:randomCode()}));
+    try{ const s=await db.doc('app/employees').get(); if(!s.exists) await db.doc('app/employees').set({list:defaults}); }catch(e){}
+  }
+  let upgraded=false;
+  async function upgradeOld(names){
+    employees={list:names.map(n=>({name:n,code:randomCode()}))};
+    if(upgraded||!dbAvailable) return; upgraded=true;
+    try{ await db.doc('app/employees').set({list:employees.list}); }catch(e){}
+  }
+  let ensuring=false;
+  async function ensureRange(){
+    if(!dbAvailable||ensuring) return;
+    const needed=allNeededKeys(); const missing=needed.filter(k=>!schedule.days||!schedule.days[k]);
+    if(!missing.length) return; ensuring=true;
+    try{
+      const s=await db.doc('app/schedule').get();
+      if(!s.exists){ const full={}; needed.forEach(k=>full[k]={shifts:[],reservations:[]}); await db.doc('app/schedule').set({days:full}); }
+      else { const patch={}; missing.forEach(k=>patch[k]={shifts:[],reservations:[]}); await db.doc('app/schedule').update({days:patch}); }
+    }catch(e){}
+    ensuring=false;
+  }
+  async function writeDay(key, patch){
+    try{ await db.doc('app/schedule').update({days:{[key]:patch}}); return true; }catch(e){ return false; }
+  }
+
+  // ---------- shift/reservation actions ----------
+  async function addShift(key, label, start, end, required){
+    if(!manager||!dbAvailable) return;
+    const d=dayObj(key);
+    const shifts=(d.shifts||[]).concat([{ id:uid('s'), label: label||'Zmena', start:start||'', end:end||'', required: Math.max(1,Math.min(30,Number(required)||1)), employees:[] }]);
+    if(await writeDay(key,{shifts})){ message('msg','Zmena pridaná.'); showToast('Nová zmena pridaná'); }
+  }
+  async function removeShift(key, shiftId){
+    if(!manager||!dbAvailable) return;
+    const d=dayObj(key); const shifts=(d.shifts||[]).filter(s=>s.id!==shiftId);
+    if(await writeDay(key,{shifts})) showToast('Zmena odstránená');
+  }
+  async function setShiftRequired(key, shiftId, val){
+    if(!manager||!dbAvailable) return;
+    const d=dayObj(key); const shifts=(d.shifts||[]).map(s=>s.id===shiftId?{...s, required:Math.max(0,Math.min(30,Number(val)||0))}:s);
+    await writeDay(key,{shifts});
+  }
+  async function signUpShift(key, shiftId){
+    if(!myName||!dbAvailable) return;
+    const d=dayObj(key); const target=(d.shifts||[]).find(s=>s.id===shiftId); if(!target) return;
+    const emps=(target.employees||[]).slice();
+    if(emps.includes(myName)) return message('msg','Na tejto zmene už si prihlásený/á.');
+    if(emps.length>=(target.required||0)) return message('msg','Táto zmena je už plná.');
+    emps.push(myName);
+    const shifts=(d.shifts||[]).map(s=>s.id===shiftId?{...s, employees:emps}:s);
+    if(await writeDay(key,{shifts})){ message('msg','Hotovo – zmena je tvoja.'); showToast('Prihlásenie úspešné 🎉'); }
+  }
+  async function removeEmployeeFromShift(key, shiftId, name){
+    if(!manager||!dbAvailable) return;
+    const d=dayObj(key); const shifts=(d.shifts||[]).map(s=>s.id===shiftId?{...s, employees:(s.employees||[]).filter(n=>n!==name)}:s);
+    await writeDay(key,{shifts});
+  }
+  async function addReservation(key, title, note){
+    if(!manager||!dbAvailable) return;
+    title=(title||'').trim(); if(!title){ message('msg','Zadaj názov rezervácie.'); return; }
+    const d=dayObj(key); const reservations=(d.reservations||[]).concat([{id:uid('r'), title, note:(note||'').trim()}]);
+    if(await writeDay(key,{reservations})){ message('msg','Rezervácia pridaná.'); showToast('Rezervácia pridaná'); }
+  }
+  async function removeReservation(key, resId){
+    if(!manager||!dbAvailable) return;
+    const d=dayObj(key); const reservations=(d.reservations||[]).filter(r=>r.id!==resId);
+    await writeDay(key,{reservations});
+  }
+
+  async function addEmployee(name){
+    name=(name||'').trim(); if(!name||!manager||!dbAvailable) return;
+    if(employees.list.some(e=>e.name.toLowerCase()===name.toLowerCase())){ showToast('Toto meno už existuje'); return; }
+    const code=randomCode(); const list=employees.list.concat([{name,code}]);
+    try{ await db.doc('app/employees').update({list}); showToast(`Pridané. Kód pre ${name}: ${code}`); }
+    catch(e){ try{ await db.doc('app/employees').set({list}); }catch(e2){} }
+  }
+  async function removeEmployeeName(name){
+    if(!manager||!dbAvailable) return;
+    const list=employees.list.filter(e=>e.name!==name);
+    try{ await db.doc('app/employees').update({list}); }catch(e){}
+    if(myName===name){ myName=''; localStorage.removeItem('cp_myname'); }
+  }
+  async function regenCode(name){
+    if(!manager||!dbAvailable) return;
+    const code=randomCode(); const list=employees.list.map(e=>e.name===name?{name,code}:e);
+    try{ await db.doc('app/employees').update({list}); showToast(`Nový kód pre ${name}: ${code}`); }catch(e){}
+  }
+  function doEmployeeLogin(name,code){
+    const entry=employees.list.find(e=>e.name===name);
+    if(!entry) return heroLoginError('Vyber meno zo zoznamu.');
+    if(String(entry.code)!==String(code).trim()) return heroLoginError('Nesprávny kód.');
+    myName=name; localStorage.setItem('cp_myname',myName);
+    showToast(`Vitaj, ${name.split(' ')[0]}!`);
+    renderAll();
+  }
+  function doLogout(){ myName=''; localStorage.removeItem('cp_myname'); renderAll(); }
+  let heroErrMsg='';
+  function heroLoginError(m){ heroErrMsg=m; renderAll(); }
+
+  // ---------- render ----------
+  function message(id,text){ $(id).textContent=text; $(id).classList.add('show'); }
+  function timeLabel(s){ return (s.start||s.end) ? `${s.start||'?'}–${s.end||'?'}` : ''; }
+
+  function renderTopRight(){
+    let html='';
+    if(myName) html+=`<div class="who-badge"><span class="avatar">${esc(myName[0]||'?')}</span>${esc(myName)}<button class="link-btn" id="logoutBtn">odhlásiť</button></div>`;
+    if(manager) html+=`<span class="badge-manager">⚡ VEDÚCI</span><button class="outline" id="lockBtn">Vypnúť</button>`;
+    else html+=`<button class="outline" id="managerBtn">🔒 Vedúci</button>`;
+    $('topright').innerHTML=html;
+    const lb=$('logoutBtn'); if(lb) lb.onclick=doLogout;
+    const mb=$('managerBtn'); if(mb) mb.onclick=()=>$('managerModal').classList.add('open');
+    const kb=$('lockBtn'); if(kb) kb.onclick=()=>{ manager=false; sessionStorage.removeItem('cp_manager'); renderAll(); };
+  }
+
+  function renderHero(){
+    const h=$('hero');
+    if(manager){
+      const needed=allNeededKeys();
+      let totalReq=0,totalFilled=0;
+      needed.forEach(k=>{ const t=dayTotals(k); totalReq+=t.req; totalFilled+=t.filled; });
+      h.innerHTML=`
+        <div><span class="tag">REŽIM VEDÚCEHO</span><h1>PREHĽAD<span>ZMIEN</span></h1><p class="lead">Sprava zmeny, rezervácie, tím a kódy zamestnancov v kalendári nižšie.</p></div>
+        <div class="who"><div class="stat-row">
+          <div class="stat"><span>Obsadené pozície</span><b>${totalFilled}/${totalReq}</b></div>
+          <div class="stat"><span>Zamestnancov</span><b>${employees.list.length}</b></div>
+        </div></div>`;
+      return;
+    }
+    if(myName){
+      const tKey=todayKey();
+      const mineDates=Object.keys(schedule.days||{}).sort().filter(k=>(schedule.days[k].shifts||[]).some(s=>(s.employees||[]).includes(myName)));
+      const next=mineDates.find(k=>k>=tKey);
+      let nextHtml='<span>Zatiaľ nemáš naplánovanú smenu.</span>';
+      if(next){
+        const d=new Date(next+'T12:00'); const diff=Math.round((new Date(next+'T00:00')-new Date(tKey+'T00:00'))/86400000);
+        const when= diff===0?'dnes':(diff===1?'zajtra':`o ${diff} dní`);
+        const s=(schedule.days[next].shifts||[]).find(s=>(s.employees||[]).includes(myName));
+        nextHtml=`<b style="font-size:24px;color:var(--yellow)">${d.getDate()}. ${MONTHS[d.getMonth()]}</b><br><span style="color:var(--muted)">${when}${s&&timeLabel(s)?' · '+timeLabel(s):''}${s?' · '+esc(s.label):''}</span>`;
+      }
+      h.innerHTML=`
+        <div><span class="tag">AHOJ</span><h1>${esc(myName.split(' ')[0]).toUpperCase()}<span>VITAJ SPÄŤ</span></h1><p class="lead">Skontroluj svoje smeny nižšie alebo si vyber voľný termín v kalendári.</p></div>
+        <div class="who"><label>MOJA NAJBLIŽŠIA SMENA</label><div style="margin-top:6px;">${nextHtml}</div></div>`;
+      return;
+    }
+    h.innerHTML=`
+      <div><span class="tag">TÍMOVÝ KALENDÁR</span><h1>VYBER SI<span>SMENU</span></h1></div>
+      <div class="who">
+        <label for="employee">KTO SA PRIHLASUJE?</label>
+        <select id="employee"><option value="">Vyber svoje meno</option>${employees.list.map(e=>`<option value="${esc(e.name)}">${esc(e.name)}</option>`).join('')}</select>
+        <label for="codeInput">OSOBNÝ KÓD</label>
+        <input type="tel" inputmode="numeric" id="codeInput" placeholder="napr. 4821">
+        <button class="primary" id="loginBtn">Prihlásiť sa</button>
+        ${heroErrMsg?`<div class="err">${esc(heroErrMsg)}</div>`:''}
+        <p>Kód ti pridelil vedúci zmeny.</p>
+      </div>`;
+    $('loginBtn').onclick=()=>{ heroErrMsg=''; doEmployeeLogin($('employee').value, $('codeInput').value); };
+    $('codeInput').addEventListener('keydown', e=>{ if(e.key==='Enter') $('loginBtn').click(); });
+  }
+
+  function renderMine(){
+    if(!myName || manager){ $('mine').style.display='none'; return; }
+    const entries=[];
+    Object.keys(schedule.days||{}).sort().forEach(k=>{
+      (schedule.days[k].shifts||[]).forEach(s=>{ if((s.employees||[]).includes(myName)) entries.push({date:k, s}); });
+    });
+    $('mine').style.display='block';
+    $('myName').textContent=myName;
+    $('chips').innerHTML=entries.length? entries.map(({date,s})=>{
+      const dt=new Date(date+'T12:00');
+      return `<button class="chip" data-my="${date}"><b>${dt.toLocaleDateString('sk-SK',{day:'numeric',month:'short'})}</b><span>${esc(s.label)}${timeLabel(s)?' · '+timeLabel(s):''}</span></button>`;
+    }).join('') : '<span class="sub">Zatiaľ nemáš žiadnu smenu.</span>';
+    document.querySelectorAll('[data-my]').forEach(x=>x.onclick=()=>openShift(x.dataset.my));
+  }
+
+  function renderCritical(){
+    if(!manager){ $('criticalSection').style.display='none'; return; }
+    const tKey=todayKey();
+    const crit=allNeededKeys().filter(k=>k>=tKey && dayTotals(k).free>0 && dayTotals(k).req>0)
+      .map(k=>({key:k, free:dayTotals(k).free})).sort((a,b)=>a.key.localeCompare(b.key));
+    if(!crit.length){ $('criticalSection').style.display='none'; return; }
+    $('criticalSection').style.display='block';
+    $('critChips').innerHTML=crit.slice(0,10).map(c=>{
+      const d=new Date(c.key+'T12:00');
+      return `<button class="chip crit-chip" data-my="${c.key}"><b>${d.getDate()}. ${MONTHS[d.getMonth()]}</b><span>chýba ${c.free}</span></button>`;
+    }).join('');
+    document.querySelectorAll('#critChips [data-my]').forEach(x=>x.onclick=()=>openShift(x.dataset.my));
+  }
+
+  function renderRoster(){
+    if(!manager){ $('rosterSection').style.display='none'; return; }
+    $('rosterSection').style.display='block';
+    $('rosterList').innerHTML=employees.list.map(e=>`
+      <div class="rrow">
+        <div class="rname"><span class="avatar">${esc(e.name[0]||'?')}</span>${esc(e.name)}</div>
+        <div class="rbtns"><span class="rcode">${esc(e.code)}</span>
+          <button class="icon-btn" data-regen="${esc(e.name)}" title="Nový kód">↻</button>
+          <button class="icon-btn danger" data-remove-emp="${esc(e.name)}" title="Odstrániť">×</button>
+        </div>
+      </div>`).join('');
+    document.querySelectorAll('[data-regen]').forEach(x=>x.onclick=()=>regenCode(x.dataset.regen));
+    document.querySelectorAll('[data-remove-emp]').forEach(x=>x.onclick=()=>{ if(confirm(`Odstrániť "${x.dataset.removeEmp}" zo zoznamu?`)) removeEmployeeName(x.dataset.removeEmp); });
+    $('addEmpBtn').onclick=()=>{ addEmployee($('newEmpInput').value); $('newEmpInput').value=''; };
+  }
+
+  function monthHTML(date){
+    const y=date.getFullYear(), m=date.getMonth();
+    const blanks=(new Date(y,m,1).getDay()+6)%7;
+    const count=new Date(y,m+1,0).getDate();
+    const tKey=todayKey();
+    let cells='<span></span>'.repeat(blanks);
+    for(let day=1; day<=count; day++){
+      const dObj=new Date(y,m,day); const key=iso(dObj);
+      const t=dayTotals(key);
+      const isMine = myName && (dayObj(key).shifts||[]).some(s=>(s.employees||[]).includes(myName));
+      let cls='day'+(t.req?' active':'')+(key===tKey?' today':'')+(t.req>0&&t.free<=0?' full':'')+(isMine?' mine':'');
+      let inner;
+      if(t.req>0){
+        inner = t.free<=0 ? `<strong>Obsadené</strong>` : `<strong>${t.free} voľné</strong>`;
+        const shiftNames = (dayObj(key).shifts||[]).map(s=>s.label).join(', ');
+        inner += `<small>${esc(shiftNames)}</small>`;
+      } else if(t.hasRes){
+        const first=(dayObj(key).reservations||[])[0];
+        inner = `<strong style="color:var(--muted)">rezervácia</strong><small>${esc(first?first.title:'')}</small>`;
+      } else {
+        inner = '<small class="closed">bez zmeny</small>';
+      }
+      cells += `<button class="${cls}" data-date="${key}"><span class="num">${day}${t.hasRes?' 🔒':''}</span>${inner}</button>`;
+    }
+    return `<section class="month"><h3>${MONTHS[m]} ${y}</h3><div class="week">${DAYS.map(d=>`<span>${d}</span>`).join('')}</div><div class="grid">${cells}</div></section>`;
+  }
+
+  function renderMonths(){
+    const [a,b]=getVisibleMonths();
+    $('months').innerHTML = monthHTML(new Date(a.year,a.month,1)) + monthHTML(new Date(b.year,b.month,1));
+    document.querySelectorAll('[data-date]').forEach(x=>x.onclick=()=>openShift(x.dataset.date));
+  }
+
+  function openShift(date){
+    selected=date; const d=dayObj(date);
+    $('shiftTitle').textContent=new Date(date+'T12:00').toLocaleDateString('sk-SK',{weekday:'long',day:'numeric',month:'long'});
+
+    // reservations
+    const resList=$('resList');
+    resList.innerHTML=(d.reservations||[]).map(r=>`
+      <div class="res-item"><div><b>🔒 ${esc(r.title)}</b>${r.note?`<span>${esc(r.note)}</span>`:''}</div>${manager?`<button data-res-remove="${r.id}">×</button>`:''}</div>
+    `).join('') || `<p class="sub">${manager?'Žiadne rezervácie pre tento deň.':'Žiadne rezervácie ani uzávery pre tento deň.'}</p>`;
+    document.querySelectorAll('[data-res-remove]').forEach(x=>x.onclick=()=>removeReservation(selected,x.dataset.resRemove).then(()=>openShift(selected)));
+    $('resAddBox').hidden=!manager;
+
+    // shifts
+    const shiftsList=$('shiftsList');
+    const shifts=d.shifts||[];
+    if(!shifts.length){
+      shiftsList.innerHTML = `<p class="sub">${manager?'Zatiaľ žiadna zmena tento deň. Pridaj ju nižšie.':'Tento deň nie je naplánovaná žiadna zmena.'}</p>`;
+    } else {
+      shiftsList.innerHTML = shifts.map(s=>{
+        const free=Math.max(0,(s.required||0)-(s.employees||[]).length);
+        const already = myName && (s.employees||[]).includes(myName);
+        const team=(s.employees||[]).map(n=>`<div class="member"><span class="avatar">${esc(n[0]||'?')}</span>${esc(n)}${manager?`<button class="remove" data-emp-remove="${s.id}|${esc(n)}">×</button>`:''}</div>`).join('') || '<p class="sub" style="margin:6px 0 0;">Zatiaľ sa nikto neprihlásil.</p>';
+        let actionHtml='';
+        if(manager){
+          actionHtml = `<div class="manage-row">
+              <span class="tiny sub">potrebných:</span>
+              <input type="number" min="0" max="30" value="${s.required||0}" data-req-input="${s.id}">
+              <button class="outline" data-remove-shift="${s.id}">Odstrániť zmenu</button>
+            </div>`;
+        } else {
+          const label = !myName ? 'Najprv sa prihlás hore' : (already ? 'Už si prihlásený/á' : (free<=0?'Obsadené':'Prihlásiť sa'));
+          actionHtml = `<button class="primary small" data-signup="${s.id}" ${(!myName||already||free<=0)?'disabled':''} style="margin-top:10px;">${label}</button>`;
+        }
+        return `<div class="shift-card">
+            <div class="shead"><div><div class="slabel">${esc(s.label)}</div><div class="stime">${timeLabel(s)}</div></div><div class="sfree ${free<=0?'full':'ok'}">${free<=0?'Obsadené':free+' voľné z '+(s.required||0)}</div></div>
+            <div class="team">${team}</div>
+            ${actionHtml}
+          </div>`;
+      }).join('');
+    }
+    document.querySelectorAll('[data-signup]').forEach(x=>x.onclick=()=>signUpShift(selected,x.dataset.signup).then(()=>openShift(selected)));
+    document.querySelectorAll('[data-remove-shift]').forEach(x=>x.onclick=()=>{ if(confirm('Odstrániť túto zmenu aj so všetkými prihlásenými?')) removeShift(selected,x.dataset.removeShift).then(()=>openShift(selected)); });
+    document.querySelectorAll('[data-emp-remove]').forEach(x=>x.onclick=()=>{ const [sid,name]=x.dataset.empRemove.split('|'); removeEmployeeFromShift(selected,sid,name).then(()=>openShift(selected)); });
+    document.querySelectorAll('[data-req-input]').forEach(x=>x.addEventListener('change',()=>setShiftRequired(selected,x.dataset.reqInput,x.value).then(()=>openShift(selected))));
+
+    $('shiftAddBox').hidden=!manager;
+    $('msg').classList.remove('show');
+    $('shiftModal').classList.add('open');
+  }
+
+  function renderAll(){
+    if(!scheduleLoaded||!employeesLoaded) return;
+    renderTopRight();
+    renderHero();
+    renderMine();
+    renderCritical();
+    renderRoster();
+    renderMonths();
+  }
+
+  $('resAddBtn').onclick=()=>{ addReservation(selected,$('resTitle').value,$('resNote').value).then(()=>{ $('resTitle').value=''; $('resNote').value=''; openShift(selected); }); };
+  $('addShiftBtn').onclick=()=>{ addShift(selected,$('newShiftLabel').value,$('newShiftStart').value,$('newShiftEnd').value,$('newShiftReq').value).then(()=>{ $('newShiftLabel').value=''; openShift(selected); }); };
+  $('unlock').onclick=()=>{
+    if($('pin').value!==MANAGER_PIN) return message('pinMsg','Nesprávny PIN.');
+    manager=true; sessionStorage.setItem('cp_manager','1'); $('pin').value='';
+    $('managerModal').classList.remove('open'); renderAll();
+  };
+  document.querySelectorAll('[data-close]').forEach(x=>x.onclick=()=>x.closest('.modal').classList.remove('open'));
+  document.querySelectorAll('.modal').forEach(x=>x.onclick=e=>{ if(e.target===x) x.classList.remove('open'); });
+
+  renderAll();
+  initDb();
+</script>
+</body>
+</html>
