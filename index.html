@@ -262,26 +262,35 @@
   }
 
   // ---------- db ----------
-  async function initDb(){
-    try{ db = await claude.use('db'); }catch(e){ db=null; }
-    if(!db){ dbAvailable=false; scheduleLoaded=true; employeesLoaded=true; renderAll(); return; }
-    dbAvailable=true;
-    db.doc('app/schedule').onSnapshot(snap=>{
-      let raw = (snap.exists && snap.data() && snap.data().days) ? snap.data().days : {};
-      if(needsMigration(raw)){
-        raw = migrateDays(raw);
-        migrateWrite(raw);
-      }
-      schedule = { days: raw };
-      scheduleLoaded=true; ensureRange(); renderAll();
-    }, ()=>{});
-    db.doc('app/employees').onSnapshot(snap=>{
-      if(snap.exists && snap.data() && Array.isArray(snap.data().list)) employees=snap.data();
-      else if(snap.exists && snap.data() && Array.isArray(snap.data().names)) upgradeOld(snap.data().names);
-      else { employees={list:[]}; seedEmployees(); }
-      employeesLoaded=true; renderAll();
-    }, ()=>{});
+async function initDb(){
+
+  scheduleLoaded = true;
+  employeesLoaded = true;
+
+  if(!localStorage.getItem('cp_employees')){
+    localStorage.setItem(
+      'cp_employees',
+      JSON.stringify({
+        list:[
+          {name:'Norbert Kvasničák',code:'2026'},
+          {name:'Zamestnanec 1',code:'1111'},
+          {name:'Zamestnanec 2',code:'2222'}
+        ]
+      })
+    );
   }
+
+  employees = JSON.parse(
+    localStorage.getItem('cp_employees')
+  );
+
+  schedule = JSON.parse(
+    localStorage.getItem('cp_schedule')
+    || '{"days":{}}'
+  );
+
+  renderAll();
+}
   let migrated=false;
   async function migrateWrite(daysObj){
     if(migrated || !dbAvailable) return; migrated=true;
